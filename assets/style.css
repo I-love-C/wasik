@@ -1,0 +1,14 @@
+body {
+    margin: 0; /* Kill default browser margins */
+    overflow: hidden; /* Kill scrollbars */
+    background: #121212;
+    color: white;
+    font-family: monospace;
+}
+.wrapper {
+    width: 100vw; /* 100% of viewport width */
+    height: 100vh; /* 100% of viewport height */
+}
+canvas {
+    background: #1e1e1e;
+}
