@@ -2,6 +2,16 @@
 #include <emscripten.h>
 
 EMSCRIPTEN_KEEPALIVE
-size_t fib_simple(size_t value) {
-    return value < 2 ? value : fib_simple(value - 1) + fib_simple(value - 2);
+size_t fib_v1(size_t value) {
+    return value < 2 ? value : fib_v1(value - 1) + fib_v1(value - 2);
+}
+
+EMSCRIPTEN_KEEPALIVE
+size_t fib_v2(size_t value) {
+    size_t a = 1, b = 1;
+    for (size_t i = 3; i < value + 1; i++) {
+        b += a;
+        a = b - a;
+    }
+    return b;
 }
