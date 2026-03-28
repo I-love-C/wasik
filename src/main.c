@@ -1,6 +1,7 @@
 #include <webview/webview.h>
 #include <stddef.h>
-#include "bundle.h"
+
+extern unsigned char build_bundle_html[];
 
 int main(void) {
     webview_t w = webview_create(1, NULL);
