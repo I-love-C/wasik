@@ -6,9 +6,8 @@ int main(void) {
     webview_t w = webview_create(1, NULL);
 
     webview_set_title(w, "Basic Example");
-    webview_set_size(w, 800, 600, WEBVIEW_HINT_NONE);
+    void *window = webview_get_window(w); gtk_window_fullscreen(GTK_WINDOW(window));
     webview_set_html(w, html);
-
     webview_run(w);
     webview_destroy(w);
     return 0;

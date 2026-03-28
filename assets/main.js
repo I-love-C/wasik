@@ -60,44 +60,18 @@ function linear_trend(data) {
 
 const sleep = (ms) => new Promise((_) => setTimeout(_, ms));
 
-// This function is only used for the slow fibonacci case (fib_v1) since all other approaches need to implement batching
-// to render anything to the  chart in timely fashion
-// fib_func function defined in bif.c and part of the Module in JS (seen in console)
-async function benchmark_low(iterations, fib_func) {
+const RENDER_EVERY_MS = 16;
+
+async function benchmark(iterations, benchmark_fib_func, batch_size = 50_000) {
   abort_call = { state: false };
-  for (let value = 1; value <= iterations; value++) {
-    if (abort_call.state == true) return;
-    var start = performance.now();
-    var _ = fib_func(value);
-    var end = performance.now();
-    var elapsed = end - start;
-
-    chart.data.labels.push(value);
-    chart.data.datasets[0].data.push(elapsed);
-    chart.update();
-
-    await sleep(0); // peak js
-  }
-}
-
-// this function can be used with better algorithms
-async function benchmark_batch_friendly_render(
-  iterations,
-  fib_func,
-  batch_size = 10_000,
-) {
-  abort_call = { state: false };
-  const RENDER_EVERY_MS = 16;
   let last_render_time = performance.now();
 
   for (let value = 1; value <= iterations; value++) {
     if (abort_call.state == true) return;
-    const start = performance.now();
-    for (let i = 0; i < batch_size; i++) fib_func(value);
-    const elapsed = (performance.now() - start) / batch_size;
 
+    const time = benchmark_fib_func(value, batch_size);
     chart.data.labels.push(value);
-    chart.data.datasets[0].data.push(elapsed);
+    chart.data.datasets[0].data.push(time);
 
     const now = performance.now();
     if (now - last_render_time >= RENDER_EVERY_MS) {
@@ -106,5 +80,4 @@ async function benchmark_batch_friendly_render(
       last_render_time = performance.now();
     }
   }
-  chart.update();
 }
