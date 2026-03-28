@@ -1,8 +1,5 @@
 #include <stddef.h>
 #include <emscripten.h>
-#include <float.h> // For DBL_MAX
-
-// volatile size_t wrench = 0;
 
 EMSCRIPTEN_KEEPALIVE
 size_t fib_v1(size_t value) {
