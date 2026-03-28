@@ -7,7 +7,7 @@ EMSCRIPTEN_PATH := $(HOME)/emsdk/upstream/emscripten/
 all: $(BUILD)wasik
 
 $(BUILD)bif.js: $(SRC)bif.c
-	$(EMSCRIPTEN_PATH)emcc $(SRC)bif.c -o $(BUILD)bif.js \
+	$(EMSCRIPTEN_PATH)emcc -O3 $(SRC)bif.c -o $(BUILD)bif.js \
 	-s SINGLE_FILE=1 \
 	-s SINGLE_FILE_BINARY_ENCODE=0 \
 	-s WASM_ASYNC_COMPILATION=0

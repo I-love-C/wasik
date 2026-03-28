@@ -10,14 +10,7 @@ const chart = new Chart(canvas, {
         label: "Execution Time (ms)",
         data: [],
         borderColor: "#00ffcc",
-        tension: 0.1,
-      },
-      {
-        label: "Trend",
-        data: [],
-        borderColor: "#ff6b6b",
-        tension: 0,
-        pointRadius: 0,
+        borderWidth: 1.5,
       },
     ],
   },
@@ -25,8 +18,15 @@ const chart = new Chart(canvas, {
     responsive: true,
     maintainAspectRatio: false,
     animation: false,
+    scales: {
+      x: {
+        max: 2, // managed manually
+      },
+    },
   },
 });
+
+// COMMANDS
 
 let abort_call = { state: false };
 
@@ -42,42 +42,34 @@ function clear() {
   chart.update();
 }
 
-function trend(trend_type_func) {
-  chart.data.datasets[1].data = trend_type_func(chart.data.datasets[0].data);
-  chart.update();
-}
+// BENCHMARK
 
-function linear_trend(data) {
-  const n = data.length;
-  const meanX = (n + 1) / 2;
-  const meanY = data.reduce((a, b) => a + b, 0) / n;
-  const slope =
-    data.reduce((s, y, i) => s + (i + 1 - meanX) * (y - meanY), 0) /
-    data.reduce((s, _, i) => s + (i + 1 - meanX) ** 2, 0);
-  const intercept = meanY - slope * meanX;
-  return data.map((_, i) => slope * (i + 1) + intercept);
-}
+const yield = () => new Promise(requestAnimationFrame);
 
-const sleep = (ms) => new Promise((_) => setTimeout(_, ms));
-
-const RENDER_EVERY_MS = 16;
-
-async function benchmark(iterations, benchmark_fib_func, batch_size = 50_000) {
+async function benchmark(
+  max_iterations,
+  buffer_ptr,
+  compute_func,
+  batch_size = 100_000,
+) {
   abort_call = { state: false };
-  let last_render_time = performance.now();
+  const c_shared_chart_array = new Float64Array(
+    wasmMemory.buffer,
+    buffer_ptr,
+    max_iterations,
+  );
 
-  for (let value = 1; value <= iterations; value++) {
+  c_shared_chart_array.fill(NaN); // chart.js ignores NaN, this is for the animation
+  chart.data.labels = Array.from({ length: max_iterations }, (_, i) => i + 1);
+  chart.data.datasets[0].data = c_shared_chart_array;
+
+  let current_val = 1;
+  while (current_val <= max_iterations) {
     if (abort_call.state == true) return;
-
-    const time = benchmark_fib_func(value, batch_size);
-    chart.data.labels.push(value);
-    chart.data.datasets[0].data.push(time);
-
-    const now = performance.now();
-    if (now - last_render_time >= RENDER_EVERY_MS) {
-      chart.update();
-      await sleep(0);
-      last_render_time = performance.now();
-    }
+    const times_added = compute_func(current_val, max_iterations, batch_size);
+    current_val += times_added;
+    chart.options.scales.x.max = current_val - 1; // elements made available to chart
+    chart.update();
+    await yield();
   }
 }
