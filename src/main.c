@@ -4,7 +4,7 @@
 extern unsigned char build_bundle_html[];
 
 static void wasik_exit(const char *a, const char *b, void *data) {
-    (void)a; (void)b;   
+    (void)a; (void)b;
     webview_terminate((webview_t)data);
 }
 
