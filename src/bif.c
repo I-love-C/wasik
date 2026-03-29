@@ -16,7 +16,7 @@ double* get_buffer_ptr() {
 #define WASIK_PREFIX  WASIK
 #define MAX_MS 10.0
 
-#define BENCHMARK_FUNC(func_name)                                                       \
+#define REGISTER_BENCHMARK_FUNC(func_name)                                                       \
 EMSCRIPTEN_KEEPALIVE                                                                    \
 int WASIK##_benchmark_chunk_##func_name(int start_val, int max_val, int batch_size) {   \
     double chunk_start_time = emscripten_get_now();                                     \
@@ -34,14 +34,14 @@ int WASIK##_benchmark_chunk_##func_name(int start_val, int max_val, int batch_si
 }
 
 size_t fib_v1(size_t value);
-BENCHMARK_FUNC(fib_v1)
+REGISTER_BENCHMARK_FUNC(fib_v1)
 
 size_t fib_v1(size_t value) {
     return value < 2 ? value : fib_v1(value - 1) + fib_v1(value - 2);
 }
 
 size_t fib_v2(size_t value);
-BENCHMARK_FUNC(fib_v2)
+REGISTER_BENCHMARK_FUNC(fib_v2)
 
 size_t fib_v2(size_t value) {
     size_t a = 1, b = 1;
