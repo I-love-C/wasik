@@ -1,0 +1,32 @@
+<style>
+    .terminal-bar {
+        display: none; /* Hidden by default */
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #000000;
+        padding: 12px 20px;
+        box-sizing: border-box;
+        z-index: 9999; /* Keep it on top of the canvas */
+    }
+
+    .terminal-input {
+        width: 100%;
+        background: transparent;
+        color: #00ffcc;
+        border: none;
+        outline: none; /* Kills the default browser focus ring */
+        font-family: monospace;
+        font-size: 16px;
+    }
+</style>
+
+<div id="terminal_container" class="terminal-bar">
+    <input
+        type="text"
+        id="terminal_input"
+        class="terminal-input"
+        placeholder="Type command..."
+    />
+</div>

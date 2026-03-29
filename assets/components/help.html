@@ -1,0 +1,65 @@
+<style>
+    .help-modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(15, 15, 15, 0.95);
+        border: 1px solid #ff6b6b;
+        border-radius: 6px;
+        padding: 20px 30px;
+        color: #e0e0e0;
+        font-family: monospace;
+        z-index: 10000; /* Sit above the canvas and terminal */
+        min-width: 400px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .help-modal h2 {
+        color: #00ffcc;
+        margin-top: 0;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+    }
+
+    .help-modal ul {
+        list-style-type: none;
+        padding-left: 10px;
+    }
+
+    .help-modal li {
+        margin-bottom: 8px;
+    }
+
+    .help-modal .cmd {
+        color: #ff6b6b;
+        font-weight: bold;
+    }
+
+    .help-close-hint {
+        margin-top: 25px;
+        font-size: 0.85em;
+        color: #666;
+        text-align: center;
+    }
+</style>
+
+<div id="help_modal" class="help-modal">
+    <h2>Benchmark Help</h2>
+    <div>
+        <h3>Commands:</h3>
+        <ul>
+            <li>
+                <span class="cmd">run &lt;algo&gt; [iters] [batch]</span> :
+                Start benchmark
+            </li>
+            <li><span class="cmd">stop</span> : Halt current benchmark</li>
+            <li><span class="cmd">clear</span> : Wipe chart data</li>
+            <li><span class="cmd">help</span> : Toggle this menu</li>
+        </ul>
+        <h3>Available Algorithms:</h3>
+        <ul id="help_algos_list"></ul>
+    </div>
+    <div class="help-close-hint">Press [Esc] to close</div>
+</div>

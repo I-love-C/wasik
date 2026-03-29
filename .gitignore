@@ -3,3 +3,4 @@ bif.wasm
 bundle.*
 wasik
 build
+app.js
